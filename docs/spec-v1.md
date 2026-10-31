@@ -21,5 +21,5 @@ Book fields:
 - If no match: 404
 
 ## Initial assumptions
-- Data is sotred in MongoDB collection named books.
+- Data is stored in MongoDB collection named books.
 - API returns JSON.
