@@ -28,33 +28,112 @@
                   "items": {
                     "type": "object",
                     "properties": {
-                      "_id": {
-                        "type": "string"
-                      },
                       "id": {
                         "type": "string"
                       },
-                      "author": {
+                      "authorId": {
                         "type": "string"
                       },
                       "title": {
                         "type": "string"
                       },
                       "publicationDate": {
-                        "type": "string"
+                        "type": "string",
+                        "format": "date"
                       }
                     }
                   }
                 },
                 "example": [
                   {
-                    "_id": "6ae3e9b969a65477e68717ac",
                     "id": "b1",
-                    "author": "Maya Rivera",
+                    "authorId": "a1",
                     "title": "Patterns of Light",
                     "publicationDate": "2021-08-17"
                   }
                 ]
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Internal server error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new book",
+        "tags": [
+          "Books"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "id",
+                  "authorId",
+                  "title",
+                  "publicationDate"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "authorId": {
+                    "type": "string"
+                  },
+                  "title": {
+                    "type": "string"
+                  },
+                  "publicationDate": {
+                    "type": "string",
+                    "format": "date"
+                  }
+                }
+              },
+              "example": {
+                "id": "b4",
+                "authorId": "a1",
+                "title": "New Book",
+                "publicationDate": "2024-05-20"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Book created successfully"
+          },
+          "400": {
+            "description": "Invalid fields, duplicate ID, or author does not exist",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "invalidFields": {
+                    "value": {
+                      "message": "Missing or invalid required fields"
+                    }
+                  },
+                  "duplicateId": {
+                    "value": {
+                      "message": "Book ID already exists"
+                    }
+                  },
+                  "invalidAuthor": {
+                    "value": {
+                      "message": "Author does not exist"
+                    }
+                  }
+                }
               }
             }
           },
@@ -93,35 +172,159 @@
             "description": "The requested book",
             "content": {
               "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "_id": {
-                      "type": "string"
-                    },
-                    "id": {
-                      "type": "string"
-                    },
-                    "author": {
-                      "type": "string"
-                    },
-                    "title": {
-                      "type": "string"
-                    },
-                    "publicationDate": {
-                      "type": "string"
-                    }
-                  }
-                },
                 "example": {
-                  "_id": "6ae3e9b969a65477e68717ac",
                   "id": "b1",
-                  "author": "Maya Rivera",
+                  "authorId": "a1",
                   "title": "Patterns of Light",
                   "publicationDate": "2021-08-17"
                 }
               }
             }
+          },
+          "404": {
+            "description": "Book not found",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Book not found"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Internal server error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update an existing book",
+        "tags": [
+          "Books"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "b1"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "authorId",
+                  "title",
+                  "publicationDate"
+                ],
+                "properties": {
+                  "authorId": {
+                    "type": "string"
+                  },
+                  "title": {
+                    "type": "string"
+                  },
+                  "publicationDate": {
+                    "type": "string",
+                    "format": "date"
+                  }
+                }
+              },
+              "example": {
+                "authorId": "a2",
+                "title": "Updated Book",
+                "publicationDate": "2024-06-15"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Book updated successfully",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "b1",
+                  "authorId": "a2",
+                  "title": "Updated Book",
+                  "publicationDate": "2024-06-15"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields or author does not exist",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "invalidFields": {
+                    "value": {
+                      "message": "Missing or invalid required fields"
+                    }
+                  },
+                  "invalidAuthor": {
+                    "value": {
+                      "message": "Author does not exist"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Book not found",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Book not found"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Internal server error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a book",
+        "tags": [
+          "Books"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "b1"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Book deleted successfully (no response body)"
           },
           "404": {
             "description": "Book not found",
